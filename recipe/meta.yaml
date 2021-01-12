@@ -28,9 +28,9 @@ test:
   requires:
     - ocaml-findlib
   commands:
-    - test -f $PREFIX/lib/ocaml/zarith/zarith.h
-    - test -f $PREFIX/lib/ocaml/zarith/zarith.cma
     - ocamlfind -query zarith
+    - test -f $PREFIX/lib/ocaml/site-lib/zarith/zarith.h
+    - test -f $PREFIX/lib/ocaml/site-lib/zarith/zarith.cma
 
 about:
   home: https://github.com/ocaml/Zarith
