@@ -19,6 +19,7 @@ requirements:
     - make
   host:
     - ocaml
+    - ocaml-findlib
     - gmp
   run:
     - {{ pin_compatible("ocaml", max_pin="x.x") }}
