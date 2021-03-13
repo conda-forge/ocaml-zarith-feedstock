@@ -1,5 +1,5 @@
 {% set name = "ocaml-zarith" %}
-{% set version = "1.11" %}
+{% set version = "1.12" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://github.com/ocaml/Zarith/archive/release-{{ version }}.tar.gz
-  sha256: f996af120a10fd06a8272ae99b7affd57cef49c57a3a596e2f589147dd183684
+  sha256: cc32563c3845c86d0f609c86d83bf8607ef12354863d31d3bffc0dacf1ed2881
 
 build:
-  number: 1
-  skip: True  # [win]
+  number: 0
+  skip: true  # [win]
 
 requirements:
   build:
@@ -36,7 +36,7 @@ about:
   home: https://github.com/ocaml/Zarith
   license: LGPL-2.0-only
   license_file: LICENSE
-  summary: 'The Zarith library implements arithmetic and logical operations over arbitrary-precision integers and rational numbers.'
+  summary: The Zarith library implements arithmetic and logical operations over arbitrary-precision integers and rational numbers.
 
 extra:
   recipe-maintainers:
