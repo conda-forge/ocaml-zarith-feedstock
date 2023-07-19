@@ -1,5 +1,5 @@
 {% set name = "ocaml-zarith" %}
-{% set version = "1.12" %}
+{% set version = "1.13" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/ocaml/Zarith/archive/release-{{ version }}.tar.gz
-  sha256: cc32563c3845c86d0f609c86d83bf8607ef12354863d31d3bffc0dacf1ed2881
+  sha256: 843c5cf64a380b80f03747fa5fea30da2947f1f5be39c64fa1ed41cd141a44a3
 
 build:
   number: 0
