@@ -1,0 +1,77 @@
+context:
+  name: ocaml-zarith
+  version: "1.14"
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/ocaml/Zarith/archive/release-${{ version }}.tar.gz
+  sha256: 5db9dcbd939153942a08581fabd846d0f3f2b8c67fe68b855127e0472d4d1859
+
+build:
+  number: 0
+  skip:
+    - win
+  script: build.sh
+
+requirements:
+  build:
+    - ${{ stdlib("c") }}
+    - ${{ compiler("ocaml") }}
+    - make
+  host:
+    - ocaml
+    - ocaml-findlib >=1.9.8
+    - gmp
+
+tests:
+  - package_contents:
+      strict: true
+      files:
+        - lib/ocaml/zarith/*
+        - lib/ocaml/stublibs/dllzarith.so
+        - lib/ocaml/stublibs/dllzarith.so.owner
+  - script:
+      # Stored C link flags must not carry a prefix path: relocation
+      # NUL-pads it and every later link fails (ocaml-feedstock#132).
+      - |
+        for a in zarith.cma zarith.cmxa; do
+          flags=$(ocamlobjinfo "${PREFIX}/lib/ocaml/zarith/${a}" | grep -E '^Extra C (object files|options):')
+          echo "${a}: ${flags}"
+          echo "${flags}" | grep -q -- '-lgmp' || exit 1
+          if echo "${flags}" | grep -Eq -- '(^|[[:space:]])-L'; then exit 1; fi
+        done
+      - ocamlfind query zarith
+      - |
+        cat > t.ml <<'ML'
+        let () = print_string (Z.to_string (Z.pow (Z.of_int 2) 100))
+        ML
+      - ocamlfind ocamlopt -package zarith -linkpkg t.ml -o t_native
+      - test "$(./t_native)" = "1267650600228229401496703205376"
+      - ocamlfind ocamlc -package zarith -linkpkg t.ml -o t_byte
+      - test "$(ocamlrun ./t_byte)" = "1267650600228229401496703205376"
+    requirements:
+      run:
+        - ocaml-compiler
+        - ocaml-findlib
+        - if: linux
+          then:
+            - gcc_${{ target_platform }}
+        - if: osx
+          then:
+            - clang_${{ target_platform }}
+            - lld
+            - llvm-tools
+
+about:
+  homepage: https://github.com/ocaml/Zarith
+  repository: https://github.com/ocaml/Zarith
+  summary: Arbitrary-precision integers and rationals for OCaml
+  license: LGPL-2.0-only WITH OCaml-LGPL-linking-exception
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - isuruf
